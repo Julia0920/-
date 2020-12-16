@@ -1,0 +1,75 @@
+Практика SQL
+
+Решение задач с сайта: https://www.sql-ex.ru/ - песочница задач SQL
+
+Задание: 6 (Serge I: 2002-10-28)
+Для каждого производителя, выпускающего ПК-блокноты c объёмом жесткого диска не менее 10 Гбайт, найти скорости таких ПК-блокнотов. Вывод: производитель, скорость.
+
+SELECT DISTINCT Product.maker, Laptop.speed
+FROM laptop 
+JOIN Product  ON Product.model = Laptop.model
+WHERE Laptop.hd >= 10
+
+Задание: 7 (Serge I: 2002-11-02)
+Найдите номера моделей и цены всех имеющихся в продаже продуктов (любого типа) производителя B (латинская буква).
+SELECT DISTINCT product.model, pc.price
+FROM Product JOIN pc ON product.model = pc.model WHERE maker = 'B'
+UNION
+SELECT DISTINCT product.model, laptop.price
+FROM product JOIN laptop ON product.model=laptop.model WHERE maker='B'
+UNION
+SELECT DISTINCT product.model, printer.price
+FROM product JOIN printer ON product.model=printer.model WHERE maker='B'
+
+_________________________________
+Кое что об операторах SQL:
+
+CREATE DATABASE database_name; — создать новую БД
+SHOW DATABASES; — посмотреть список БД
+DROP DATABASE database_name; — удалить БД
+USE database_name; — работать в БД
+CREATE TABLE table_name (id INT, ....); — создать таблицу
+SHOW TABLES; — посмотреть список таблиц
+DESC TABLE table_name; — посмотреть схему таблицы
+DROP TABLE table_name; — удалить таблицу
+INSERT INTO table_name VALUES (); — добавить поле в таблицу
+SELECT * FROM table_name WHERE table_row = value; — получить поля в таблице при условии после WHERE
+SELECT * FROM table_name; — получить все поля в таблице
+ALTER TABLE table_name ADD COLUMN column_name COLUMN_TYPE; — добавить поле новое поле в схему таблицы
+UPDATE talbe_name SET talbe_row1 = value1 WHERE table_row2 = value2; — обновить записи в таблице: установить значения одного поля при условии для другого поля
+DELETE FROM table_name WHERE table_row1 = value1; — удалить поле (или поля) из таблицы при определенном условии.
+
+ В каком именно порядке должны идти операторы в SELECT запросе:
+SELECT
+  [DISTINCT | DISTINCTROW | ALL]
+  select_expression,...
+FROM table_references
+[WHERE where_definition]
+[GROUP BY {unsigned_integer | col_name | formula}]
+[HAVING where_definition]
+[ORDER BY {unsigned_integer | col_name | formula} [ASC | DESC], ...]
+
+Несколько самых распространенных агрегирующих  функций (использовать в группировке (GROUP BY):
+COUNT — количество записей, можно без группировки, используют как COUNT(*). В случае же группировки по какому-то полю — COUNT(groupped_field);
+MAX — находит максимальное значение по определенному полю;
+MIN — находит минимальное значение по определенному полю;
+SUM — находит сумму по определенному полю;
+AVG — находит среднее значение.
+
+INNER JOIN занимается тем, что выдает все записи на те соединения, которые есть в двух таблицах. Вот как выглядит общий синтаксис, когда мы хотим соединить две таблицы table1 и table2:
+
+SELECT * FROM table1 t1 INNER JOIN table2 ON t1.id = t2.t1_id;
+
+Оператор SQL DISTINCT используется для указания на то, что следует работать только с уникальными значениями столбца.
+SELECT DISTINCT column_name FROM table_name
+
+_____________________________________
+Полезные ссылки, где изучать SQL:
+http://www.sql-tutorial.ru/ru - интерактивный учебник по SQL
+https://www.sql-ex.ru/ - песочница задач SQL
+https://habr.com/ru/post/480838/ - SQL запросы быстро. Часть 1
+https://www.w3schools.com/sql/trysql.asp?filename=trysql_op_in - БД песочница
+http://exercises-on-sql.blogspot.com/2017/02/select-sql.html - SELECT (обучающий этап) задачи по SQL запросам
+https://rtfm.co.ua/mysql-commands/ MySQL/MariaDB: наиболее используемые команды, примеры
+https://javarush.ru/groups/posts/2946-java-proekt-ot-a-do-ja-razbiraem-bazih-dannihkh-i-jazihk-sql - "Java-проект от А до Я": разбираем базы данных и язык SQL
+Курс Трегулова платный https://www.udemy.com/course/sql-oracle-certification/ 
