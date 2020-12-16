@@ -1,7 +1,7 @@
 Практика SQL
-
+-----------------
 Решение задач с сайта: https://www.sql-ex.ru/ - песочница задач SQL
-
+-----------------
 Задание: 6 (Serge I: 2002-10-28)
 Для каждого производителя, выпускающего ПК-блокноты c объёмом жесткого диска не менее 10 Гбайт, найти скорости таких ПК-блокнотов. Вывод: производитель, скорость.
 
@@ -20,10 +20,53 @@ FROM product JOIN laptop ON product.model=laptop.model WHERE maker='B'
 UNION
 SELECT DISTINCT product.model, printer.price
 FROM product JOIN printer ON product.model=printer.model WHERE maker='B'
+-----------------
+Задачи с сайта: https://habr.com/ru/post/480838/  в БД https://www.w3schools.com/sql/trysql.asp?filename=trysql_op_in - БД песочница
+-----------------
+1. Задача. Напишите CustomerName, который заказал продукт Laughing Lumberjack Lager:
 
+Вариант 1. Решение через SELECT:
+SELECT * FROM Products
+Where ProductName = 'Laughing Lumberjack Lager';
+
+SELECT * FROM OrderDetails
+where 	ProductID = 67;
+
+SELECT * FROM [Orders]
+where 	OrderID = 10284;
+
+SELECT * FROM [Customers]
+where 	CustomerID = 44;
+
+Вариант 2. Решение через при помощи JOIN:
+SELECT Customers.CustomerName,Products.ProductName
+FROM Customers INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+INNER JOIN Products ON OrderDetails.ProductID=Products.ProductID
+Where ProductName = 'Laughing Lumberjack Lager' ;
+CustomerName
+ProductName
+Lehmanns Marktstand
+Laughing Lumberjack Lager
+P.S. Более компактно:  USING (ColumnName) вместо ON table1.ColumnName=teble2.ColumnName
+
+2. Задача. Напишите для таблицы Suppliers запрос, который для поставщиков, телефон которых заканчивается на 2955, изменит город на значение test: 
+UPDATE Suppliers  Set City = 'test' where 	Phone LIke '%2955';
+P.S. Помнить про SELECT перед обновлением и после. Поиск по шаблону: like '%test%', где % - любое количество символов (больше 0).
+
+3. Задача. Напишите запрос, который добавит в таблицу Categories новую категорию с названием test, идентификатором 777 и описанием test: 
+INSERT INTO Categories VALUES (777,'test','test');
+
+4. Задача. Напишите общее количество товаров (Quantity) из таблицы OrderDetails, у которых идентификатор заказа (OrderID) находится между 10299 и 10362 включительно. Запрос:
+
+SELECT * FROM [OrderDetails]
+Where OrderID BETWEEN 10299 AND 10362;
+
+P.S. BETWEEN - между, если надо указать диапазон. П: Давайте выберем записи с id от 2-х до 4-х включительно: SELECT * FROM workers WHERE id BETWEEN 2 AND 4.
 _________________________________
-Кое что об операторах SQL:
+Операторы SQL:
 
+Кое что об операторах SQL:
 CREATE DATABASE database_name; — создать новую БД
 SHOW DATABASES; — посмотреть список БД
 DROP DATABASE database_name; — удалить БД
