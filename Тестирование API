@@ -1,0 +1,77 @@
+#API Яндекс.Диска
+Тестирование API c Restlet Client  - расширение для браузера Chrome (Talend API Tester),  практические задания из курса https://ulearn.me/course/testing/DevTools_896b0703-6ab1-43b6-8580-dbc934ee74dd
+"Тестовый токен" (OAuthToken) получение https://tech.yandex.ru/disk/poligon/ 
+
+Задания-запрсы-ответы:
+
+1.1 В поле ввода напишите запрос, который в корне Диска создаст папку под названием Test: 
+Запрос (PUT):  https://cloud-api.yandex.net/v1/disk/resources?path=Test   или 
+PUT https://cloud-api.yandex.net/v1/disk/resources?path=disk:/Test
+Ответ: {
+"href": "https://cloud-api.yandex.net/v1/disk/resources?path=disk%3A%2FTest",
+"method": "GET",
+"templated": false }
+1.2 Создайте запрос, который вернет метаинформацию о созданной в предыдущем задании папке. Папка должна быть пуста! В поле ввода напишите полный путь к этой папке на Диске (значение ключа “path” в ответе на запрос)
+ Запрос <GET> <https://cloud-api.yandex.net/v1/disk/resources?path=Test>
+ В ответе дает информацию о расположении папки Test:  "path": "disk:/Test"
+
+2. Загрузить файл testfile.png в созданную ранее папку Test. Для этого нужно выполнить 2 следующие подзадачи:
+2.1. В поле ввода напишите запрос, в результате которого можно получить URL для загрузки файла на Диск. Название загружаемого файла обязательно должно быть testfile.png:
+Запрос (GET): https://cloud-api.yandex.net/v1/disk/resources/upload?path=disk:/Test/testfile.png или
+GET https://cloud-api.yandex.net/v1/disk/resources/upload?path=Test/testfile.png, в BODY ответа нужно найти параметр  href:
+2.2. Используя полученную ссылку в предыдущем задании (2.1), в поле ввода напишите запрос, который загрузит файл на Диск: 
+Запрос(PUT): https://uploader23j.disk.yandex.net:443/upload-target/20201105T153823.567.utd.5tvzmwneej4uyp7mo4vhctdwz-k23j.644978
+2.3 Создайте запрос, который вернет общую информацию о загруженном
+Запрос (GET): https://cloud-api.yandex.net/v1/disk/resources?path=Test/testfile.png, в BODY ответа нужно найти параметр size
+
+3. Запрос DELETE: 
+3.1 Удаление в корзину:
+Запрос (DELETE): https://cloud-api.yandex.net/v1/disk/resources?path=Test1
+3.2 Удаление из корзины:
+Запрос (DELETE): https://cloud-api.yandex.net/v1/disk/trash/resources?path=Test1
+3.3 Запрос, который навсегда удалит созданную ранее папку Test (минуя корзины):
+Запрос (DELETE): https://cloud-api.yandex.net/v1/disk/resources?path=Test&permanently=true или DELETE https://cloud-api.yandex.net/v1/disk/resources?permanently=true&path=Test
+________________________
+#API Яндекс:Директ
+(Обучающий курс https://yandex.ru/dev/direct/doc/start/index.html/) 
+
+Запросы в Песочнице. Запуск из командной строки Windows. 
+Примеры:
+1.get Получение списка всех компаний (для каждой кампании получили только идентификатор и название):
+curl -k -H "Authorization: Bearer ТОКЕН" -d "{\"method\":\"get\",\"params\":{\"SelectionCriteria\":{},\"FieldNames\":[\"Id\",\"Name\"]}}" https://api-sandbox.direct.yandex.com/json/v5/campaigns
+Ответ:{"result":{"Campaigns":[{"Id":403517,"Name":"Test API Sandbox campaign 1"},
+{"Id":403518,"Name":"Test API Sandbox campaign 2"},
+{"Name":"Test API Sandbox campaign 3","Id":403519}]}}
+
+2.get Только компании с типом «Текстово-графические объявления»:
+curl -k -H "Authorization: Bearer ТОКЕН" -d "{\"method\":\"get\",\"params\":{\"SelectionCriteria\":{ \"Types\": [\"TEXT_CAMPAIGN\"]},\"FieldNames\":[\"Id\",\"Name\"],\"TextCampaignFieldNames\":[\"BiddingStrategy\"]}}" https://api-sandbox.direct.yandex.com/json/v5/campaigns
+Ответ:{"result":{"Campaigns":[{"Name":"Test API Sandbox campaign 1","Id":403517,"TextCampaign":
+{"BiddingStrategy":{"Network":{"BiddingStrategyType":"MAXIMUM_COVERAGE"},"Search":{"BiddingStrategyType":"HIGHEST_POSITION"}}}},
+{"Name":"Test API Sandbox campaign 2","Id":403518,"TextCampaign":{"BiddingStrategy":{"Network":{"BiddingStrategyType":"MAXIMUM_COVERAGE"},
+"Search":{"BiddingStrategyType":"HIGHEST_POSITION"}}}},{"TextCampaign":{"BiddingStrategy":{"Search":{"BiddingStrategyType":"HIGHEST_POSITION"},
+"Network":{"BiddingStrategyType":"MAXIMUM_COVERAGE"}}},"Id":403519,"Name":"Test API Sandbox campaign 3"}]}}
+
+3.get Получение списка групп объявлений кампании:
+curl -k -H "Authorization: Bearer ТОКЕН" -d "{\"method\":\"get\",\"params\":{\"SelectionCriteria\":{\"CampaignIds\":[403517]},\"FieldNames\":[\"Id\",\"Name\",\"Status\",\"Type\"]}}" https://api-sandbox.direct.yandex.com/json/v5/adgroups
+Ответ: {"result":{"AdGroups":[{"Id":3986357,"Name":"Группа №3986357","Status":"ACCEPTED","Type":"TEXT_AD_GROUP"},
+{"Id":3986358,"Name":"Группа №3986358","Status":"ACCEPTED","Type":"TEXT_AD_GROUP"},
+{"Id":3986359,"Name":"Группа №3986359","Status":"ACCEPTED","Type":"TEXT_AD_GROUP"},
+{"Id":3986360,"Name":"Группа №3986360","Status":"ACCEPTED","Type":"TEXT_AD_GROUP"},
+{"Id":3986361,"Name":"Группа №3986361","Status":"ACCEPTED","Type":"TEXT_AD_GROUP"}]}}
+
+4.update Включение раздельного управления ставками на поиске и в сетях:
+curl -k -H "Authorization: Bearer ТОКЕН" -d "{\"method\":\"update\",\"params\":{\"Campaigns\":[{\"Id\":403517,\"TextCampaign\":{\"BiddingStrategy\":{\"Network\":{\"BiddingStrategyType\":\"MAXIMUM_COVERAGE\"}}}}]}}" https://api-sandbox.direct.yandex.com/json/v5/campaigns
+_________________________________
+Тестирование API немного теории:
+c Postman (https://software-testing.ru/library/testing/testing-tools/2638-postman, https://jsonplaceholder.typicode.com/, https://learning.postman.com/docs/getting-started/introduction/)
+c Restlet Client  - расширение для браузера Chrome (Talend API Tester)
+c Fiddler ( https://www.youtube.com/watch?v=YPg18W7O8aU&feature=youtu.be&t=48 - рассматриваются способы использования отладчика Fiddler 
+https://www.tutorialsteacher.com/webapi/test-web-api )
+
+request - вопрос и response - ответ
+Обычно при обращении к веб API используются запросы HTTP. Эти методы также называют HTTP глаголами:
+GET - получение ресурса. Самый популярный. Используется для получения или чтения данных.
+POST - создание ресурса. 
+PUT - обновление ресурса
+DELETE - удаление ресурса
+
